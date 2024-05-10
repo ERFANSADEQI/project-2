@@ -37,4 +37,18 @@ func echo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleMessages() {
+	for {
+		msg := <- broadcast
+
+		for client := range clients {
+			err := client.WriteMessage(websocket.TextMessage, []byte(msg))
+			if err!= nil {
+                client.Close()
+                delete(clients, client)
+            }
+		}
+	}
+}
+
 
