@@ -51,4 +51,17 @@ func handleMessages() {
 	}
 }
 
+func main() {
+	gin.SetMode(gin.ReleaseMode)
+    router := gin.Default()
+
+    router.GET("/ws", func(c *gin.Context) {
+        echo(c.Writer, c.Request)
+    })
+
+    go handleMessages()
+
+    router.SetTrustedProxies([]string{"127.0.0.1"})
+	router.Run(":8889")
+}
 
